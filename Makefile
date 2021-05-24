@@ -2,6 +2,8 @@
 
 DXROOT ?= $(USERPROFILE)/sdks/directx/dx81
 
+RELEASE ?= 1
+
 ifeq (0,$(RELEASE))
  OPTLEVEL=-Og
 else
@@ -33,6 +35,9 @@ ifeq (mingw32,$(findstring mingw32,$(machine)))
  SOURCES+= src/driver_directsound.c src/driver_winmm.c
 
  CPPFLAGS+= -DHAVE_VORBIS
+else ifeq ($(PLATFORM),AOS4)
+ CPPFLAGS+= -DHAVE_SDL=2 -DHAVE_VORBIS -I/sdk/local/common/include -DB_BIG_ENDIAN -D__POWERPC__
+ SOURCES+= src/driver_sdl.c
 else
  ifneq (0,$(JFAUDIOLIB_HAVE_SDL))
   CPPFLAGS+= -DHAVE_SDL=2 $(shell $(SDL2CONFIG) --cflags)

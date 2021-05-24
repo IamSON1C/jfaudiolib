@@ -28,6 +28,8 @@
 # else
 #  include <SDL/SDL.h>
 # endif
+#elif __amigaos4__
+# include <SDL2/SDL.h>
 #else
 # include <SDL.h>
 #endif
@@ -201,7 +203,9 @@ int SDLDrv_PCM_Init(int * mixrate, int * numchannels, int * samplebits, void * i
     #else
     {
         const char * drivername = SDL_GetCurrentAudioDriver();
+#ifndef __amigaos4__
         fprintf(stderr, "SDL_GetCurrentAudioDriver: %s\n", drivername ? drivername : "(error)");
+#endif
     }
     #endif
 
@@ -296,11 +300,11 @@ int SDLDrv_PCM_BeginPlayback(char *BufferStart, int BufferSize,
         ErrorCode = SDLErr_Uninitialised;
         return SDLErr_Error;
     }
-    
+
     if (Playing) {
         SDLDrv_PCM_StopPlayback();
     }
-
+    
     MixBuffer = BufferStart;
     MixBufferSize = BufferSize;
     MixBufferCount = NumDivisions;
